@@ -2,8 +2,7 @@
     <div class="map-container">
         <div id="map-container"></div>
         <NavigationCtrl @zoomIn="zoomIn" @zoomOut="zoomOut" @resetMap="resetMap" ></NavigationCtrl>
-        <MapTools @marker="addMarker" @polyline="addPolyline" @polygon="addPolygon" @tooltips = "addTooltips" @popup = "addPopup"
-                  @Bindpopup="addBindpopup"
+        <MapTools @marker="addMarker" @polyline="addPolyline" @polygon="addPolygon"
         ></MapTools>
     </div>
 </template>
@@ -153,59 +152,7 @@
                     opacity:1
                 }
                 this.$utils.map.createPolygon(this.map,this.singlePolygon,singlestyle)
-                this.$utils.map.createPolygon(this.map,this.miltiplePolygon,singlestyle)
-            },
-
-            //信息提示Tooltip
-            addTooltips(){
-                let pngIcon = this.$utils.map.createIcon({
-                    iconUrl:require('../assets/98f9b959-b0a6-4ad8-947e-2489dbebbca5.png')
-                    // iconSize:[32,32]
-                })
-                let marker = this.$utils.map.createMakerByXY(this.map, [-0.095, 51.505], {
-                    icon: pngIcon
-                });
-                let tooltips = '<h1>我是Tooltips提示</h1><p class="tooptips_p">我是Tooltips提示的P标签信息</p>'
-                marker.bindTooltip(tooltips,{
-                    className:'tooptips_p'
-                })
-            },
-            //直接在地图上添加popup
-            addPopup(){
-                console.log(this.$utils.map.createLatlonByArray([51.505,-0.095]))
-                let popup = this.$utils.map.createPopup(this.map,{
-                    maxWidth:200,
-                    minWidth:100,
-                    className: "popup"
-                })
-                popup.setLatLng(this.$utils.map.createLatlonByArray([51.505,-0.095]))
-                popup.setContent(
-                         '<h1>popup 信息</h1><p class="popup">popup 的P信息</p>'
-                     )
-                popup.openOn(this.map)
-            },
-            addBindpopup(){
-                let popup = this.$utils.map.createPopup(this.map,{
-                    maxWidth:200,
-                    minWidth:100,
-                    className: "popup"
-                })
-                popup.setContent(
-                    '<h1>popup 信息</h1><p class="popup">popup 的P信息</p>'
-                )
-                //创建marker
-                let pngIcon = this.$utils.map.createIcon({
-                    iconUrl:require('../assets/98f9b959-b0a6-4ad8-947e-2489dbebbca5.png')
-                    // iconSize:[32,32]
-                })
-                let marker = this.$utils.map.createMakerByXY(this.map, [-0.095, 51.505], {
-                    icon: pngIcon
-                });
-                //绑定marker
-                marker.bindPopup(popup)
             }
-
-
         }
     }
 </script>
@@ -221,8 +168,5 @@
     #map-container {
         width: 100%;
         height: 100%;
-    }
-    .tooptips_p,popup{
-        color: red;
     }
 </style>

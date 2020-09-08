@@ -47,18 +47,8 @@ const createPolygon = (map,areaPath,areaOptions) => {
     return polygon
 }
 
-//构造popup  不依附于图层
-const createPopup = (map,options) =>{
-    let popup =$L.popup(options)
-    //popup.addTo(map)
-    return popup
-}
-const createLatlonByArray = (coordinate) => {
-    let latLng = $L.latLng(coordinate[0],coordinate[1]);
-    return latLng;
-};
 
 
 export default { createMap ,createTitleLayer ,createIcon,
-    createMakerByXY,createPolyline,createPolygon,createLatlonByArray,createPopup
+    createMakerByXY,createPolyline,createPolygon
 }
