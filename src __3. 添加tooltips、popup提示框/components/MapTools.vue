@@ -1,5 +1,5 @@
 <template>
-    <div class="map-tools1">
+    <div class="map-tools">
         <ul>
             <li @click="$emit('marker')">Maker</li>
             <li @click="$emit('polyline')">Polyline</li>
@@ -18,7 +18,7 @@
 </script>
 
 <style lang="less">
-    .map-tools1 {
+    .map-tools {
         position: absolute;
         right: 15px;
         top: 15px;

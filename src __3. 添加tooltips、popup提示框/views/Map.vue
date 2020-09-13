@@ -5,22 +5,17 @@
         <MapTools @marker="addMarker" @polyline="addPolyline" @polygon="addPolygon" @tooltips = "addTooltips" @popup = "addPopup"
                   @Bindpopup="addBindpopup"
         ></MapTools>
-
-        <MapDraw @point="drawPoint" @polyline="drawPolyline" @polygon="drawPolygon" @end="drawOff"></MapDraw>
     </div>
 </template>
 
 <script>
     import NavigationCtrl from "../components/NavigationCtrl";
     import MapTools from "../components/MapTools";
-    import MapDraw from "../components/MapDraw";
-    import '../assets/leaflet.less'
     export default {
         name: "Map",
         components:{
             NavigationCtrl,
-            MapTools,
-            MapDraw
+            MapTools
         },
         data:()=>{
           return {
@@ -101,16 +96,6 @@
                       [51.49762961696847, -0.06025314331054688]
                   ]
               ],
-
-              overLayer:{
-                  polylines:[]     //存放最终完成后产生的线对象
-              },
-              tempGp:{
-                  lineNode:[],//绘制中生成线图形的坐标串
-                  lineNodeLen:0, //已添加的节点的数量
-                  tempLine:null, //绘制完成前地图上的线对象
-                  tempNode:[]  //每次单击产生的节点对象
-              }
           }
         },
         mounted() {
@@ -218,93 +203,7 @@
                 });
                 //绑定marker
                 marker.bindPopup(popup)
-            },
-
-
-
-            //监听地图事件
-            drawOn(fn){
-                this.map.off('click')
-                this.map.on('click',evt => fn(evt))
-            },
-            //移除监听地图事件
-            drawOff(){
-                this.map.off('click')
-                this.$utils.map.removeCursorStyle(this.map); //复原鼠标平移样式
-            },
-            //监听鼠标点击事件图标的添加
-            drawPoint(){
-                // this.map.on('click',function (e) {
-                //     this.$utils.map.createMakerByLatlng(e.latlng).addTo(this.map)
-                // })
-                this.$utils.map.addCursorStyle(this.map,"pointer-cursor") //鼠标样式
-                this.drawOn( evt => {
-                    this.$utils.map.createMakerByLatlng(evt.latlng).addTo(this.map)
-
-                })
-            },
-            drawPolyline() {
-                this.$utils.map.addCursorStyle(this.map,"pointer-cursor") //鼠标样式
-                let tempPolygonOpts = {    //绘制过程中线条样式
-                    color:"rgba(255,0,0,0.85)",
-                    weight:3,
-                    opacity:0.8
-                }
-                let finalPolygonOpts = {  //完成绘制时线条的样式
-                    color:"rgba(0,255,0,0.85)",
-                    weight:3,
-                    opacity:0.8
-                }
-                this.map.on('click',e => {
-                    this.tempGp.lineNode.push([e.latlng.lat,e.latlng.lng]) //绘制中生成线图形的坐标串
-                    this.tempGp.tempNode.push(this.addNode(e.latlng,this.map))
-                    //更新已添加的节点数量
-                    this.tempGp.lineNodeLen = this.tempGp.lineNode.length;
-                })
-                this.map.on("mousemove",e => {
-                    if(this.tempGp.lineNodeLen >= 1 ) {
-                        if(this.tempGp.tempLine) this.tempGp.tempLine.remove()
-                        this.tempGp.lineNode[this.tempGp.lineNodeLen] = [
-                            e.latlng.lat,
-                            e.latlng.lng
-                        ];
-                        // 绘制新的临时图形
-                        this.tempGp.tempLine = this.$utils.map.createPolyline(
-                            this.map,
-                            this.tempGp.lineNode,
-                            tempPolygonOpts
-                        );
-                    }
-                })
-                // 双击地图结束绘制
-                this.map.on("dblclick", () => {
-                    this.overLayer.polylines.push(
-                        this.$utils.map.createPolyline(
-                            this.map,
-                            this.tempGp.lineNode,
-                            finalPolygonOpts
-                        )
-                    );
-
-                    // 重置临时数据
-                    this.tempGp.lineNode = [];
-                    this.tempGp.lineNodeLen = 0;
-                    this.tempGp.tempLine.remove();
-                    this.tempGp.tempNode.map(el => el.remove());
-                });
-            },
-            addNode(latlng,map){
-                let node = this.$utils.map.createIcon({
-                    iconUrl:require('../assets/98f9b959-b0a6-4ad8-947e-2489dbebbca5.png')
-                    // iconSize:[32,32]
-                })
-                node = this.$utils.map.createMakerByXY(this.map, [latlng.lat, latlng.lng], {
-                    icon: node
-                });
-                node.addTo(map)
-                return node
-            },
-            drawPolygon() {}
+            }
 
 
         }
